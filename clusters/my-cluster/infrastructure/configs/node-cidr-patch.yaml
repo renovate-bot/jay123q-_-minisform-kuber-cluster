@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: node-cidr-patcher
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-cidr-patcher
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: node-cidr-patcher
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: node-cidr-patcher
+subjects:
+- kind: ServiceAccount
+  name: node-cidr-patcher
+  namespace: kube-system
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-node-cidr
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      serviceAccountName: node-cidr-patcher
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command:
+        - sh
+        - -c
+        - |
+          # Get the node name
+          NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
+          
+          # Check if podCIDR is already set
+          CURRENT_CIDR=$(kubectl get node $NODE_NAME -o jsonpath='{.spec.podCIDR}')
+          
+          if [ -z "$CURRENT_CIDR" ]; then
+            echo "Patching node $NODE_NAME with podCIDR 10.244.0.0/24"
+            kubectl patch node $NODE_NAME -p '{"spec":{"podCIDR":"10.244.0.0/24"}}'
+            echo "Node patched successfully"
+          else
+            echo "Node $NODE_NAME already has podCIDR: $CURRENT_CIDR"
+          fi
+      restartPolicy: OnFailure
+  backoffLimit: 3
