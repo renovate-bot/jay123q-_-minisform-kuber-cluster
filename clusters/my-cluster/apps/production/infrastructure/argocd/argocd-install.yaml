@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 data:
   # Run server without TLS since Istio will handle it
+  # retry redeploy
   server.insecure: "true"
 ---
 apiVersion: argoproj.io/v1alpha1
