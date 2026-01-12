@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/production/infrastructure/argocd
+  path: ./clusters/my-cluster/apps/staging/infrastructure/argocd
   prune: true
   wait: true
   healthChecks:
