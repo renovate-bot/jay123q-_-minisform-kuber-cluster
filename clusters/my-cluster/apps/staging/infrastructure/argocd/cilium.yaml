@@ -20,6 +20,7 @@ networking:
 
 ---
 # Cilium Helm Values
+# Cilium Helm Values
 cluster:
   name: kubernetes
 operator:
