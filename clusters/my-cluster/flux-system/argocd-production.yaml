@@ -17,3 +17,7 @@ spec:
     kind: Deployment
     name: argocd-server
     namespace: argocd
+scripts:
+  script: |
+    #!/bin/bash
+    flux run ./../../scripts/installHelmInstall.sh

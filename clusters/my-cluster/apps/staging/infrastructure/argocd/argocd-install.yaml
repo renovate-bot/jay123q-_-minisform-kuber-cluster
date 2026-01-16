@@ -37,3 +37,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
     #redeploy
+scripts:
+  script: |
+    #!/bin/bash
+    flux run ./../../scripts/installHelmInstall.sh
