@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# removing cilium
+uninstall cilium
+
 RELEASE_NAME="my-release"
 CHART_NAME="Cilium" # Replace with your chart name
 VALUES_FILE="chart-version-0-0-1/values.yaml"
