@@ -1,0 +1,10 @@
+# values.yaml
+kubeProxyReplacement: strict
+hubble:
+  enabled: true
+  ui:
+    enabled: true
+# Define your IPAM mode, e.g., 'kubernetes' for using Kubernetes assigned pod CIDRs
+ipam:
+  mode: kubernetes
+ipv4NativeRoutingCIDR: "10.0.0.0/8"
