@@ -9,10 +9,10 @@ echo "Adding Helm chart repository..."
 helm repo add cilium https://helm.cilium.io/
 helm repo update
 
-helm install cilium cilium/cilium --namespace kube-system -f $VALUES_FILE
+# helm install cilium cilium/cilium --namespace kube-system -f $VALUES_FILE
 # helm install cilium cilium/cilium --namespace kube-system -f helmValues/ciliumValues.yaml
-helm install cilium cilium/cilium --namespace kube-system -f $DIR_PATH+$VALUES_FILE
-
+# helm install cilium cilium/cilium --namespace kube-system -f $DIR_PATH+$VALUES_FILE
+helm install cilium cilium/cilium --version 1.18.5 --namespace kube-system
 
 
 echo "Installing Helm chart $CHART_NAME with values from $VALUES_FILE..."
