@@ -37,3 +37,7 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+scripts:
+  script: |
+    #!/bin/bash
+    ./../../../../scripts/helmInstall.sh

@@ -40,4 +40,4 @@ spec:
 scripts:
   script: |
     #!/bin/bash
-    flux run ./../../scripts/installHelmInstall.sh
+    ./../../../../scripts/helmInstall.sh
