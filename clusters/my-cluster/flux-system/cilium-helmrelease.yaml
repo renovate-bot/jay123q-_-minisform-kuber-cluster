@@ -36,6 +36,18 @@ spec:
 
   # --- Core Configuration ---
   values:
+  # Essential for 2026 connectivity testing
+    hubble:
+      enabled: true
+      relay:
+        enabled: true
+      ui:
+        enabled: true
+    
+    # Ensure DNS proxy is active for connectivity checks
+    dnsproxy:
+      enable: true
+      
     operator:
       replicas: 1
     envoy:
