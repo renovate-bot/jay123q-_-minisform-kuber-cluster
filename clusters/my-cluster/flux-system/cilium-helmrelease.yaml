@@ -35,3 +35,11 @@ spec:
     # Basic CNI configuration
     ipam:
       mode: kubernetes
+
+    tls:
+    readSecretsOnlyFromSecretsNamespace: true
+    secretsNamespace:
+      name: cilium-secrets # This can be any valid namespace name
+    secretSync:
+      enabled: true
+
