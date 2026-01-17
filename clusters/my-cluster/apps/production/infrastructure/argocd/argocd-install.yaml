@@ -5,7 +5,6 @@ metadata:
   namespace: argocd
 data:
   # Run server without TLS since Istio will handle it
-  # retry redeploy
   server.insecure: "true"
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -37,8 +36,3 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-scripts:
-  script: |
-    #!/bin/bash
-    #./../../../../scripts/helmInstall.sh
-    helm install cilium cilium/cilium

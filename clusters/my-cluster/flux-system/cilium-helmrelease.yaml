@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cilium
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 10m
+  chart:
+    spec:
+      chart: cilium
+      version: '1.18.6'
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+        namespace: flux-system
+      interval: 1h
+  # Install in default namespace to match current installation
+  targetNamespace: default
+  install:
+    createNamespace: true
+    # Use replace strategy to handle existing resources
+    replace: true
+  upgrade:
+    # Force upgrade to handle conflicts
+    force: true
+  values:
+    # For single-node cluster, only run 1 operator replica
+    operator:
+      replicas: 1
+    # Enable envoy
+    envoy:
+      enabled: true
+    # Basic CNI configuration
+    ipam:
+      mode: kubernetes

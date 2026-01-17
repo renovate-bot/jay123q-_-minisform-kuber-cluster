@@ -5,3 +5,5 @@ resources:
 - gotk-sync.yaml
 - argocd-production.yaml
 - argocd-staging.yaml
+- cilium-helmrepo.yaml
+- cilium-helmrelease.yaml
