@@ -7,7 +7,7 @@
 # sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
 # sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
 # rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
-helm uninstall cilium --namespace default
+# helm uninstall cilium --namespace default
 
 #TODO
 # see if you can get helm logs out of this, i wonder why we cant install at runtime
