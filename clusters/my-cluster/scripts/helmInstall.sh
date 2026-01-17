@@ -30,3 +30,4 @@ rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 # #helm install "$RELEASE_NAME" "$CHART_NAME" -f "$VALUES_FILE"
 
 echo "Installation complete."
+# retrying
