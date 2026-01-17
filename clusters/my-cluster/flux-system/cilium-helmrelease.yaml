@@ -3,10 +3,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cilium
-  namespace: kube-system
+  namespace: kube-system # The object location
 spec:
   interval: 10m
   timeout: 10m
+  # targetNamespace: kube-system # (Optional) explicit target
   chart:
     spec:
       chart: cilium
@@ -16,30 +17,27 @@ spec:
         name: cilium
         namespace: kube-system
       interval: 1h
-  # Install in default namespace to match current installation
-  targetNamespace: default
   install:
     createNamespace: true
-    # Use replace strategy to handle existing resources
-    replace: true
+    remediation:
+      retries: 3
   upgrade:
-    # Force upgrade to handle conflicts
-    force: true
+    remediation:
+      retries: 3
+    # Only use 'force' if you have persistent CRD/Immutable field issues
+    # force: true 
   values:
-    # For single-node cluster, only run 1 operator replica
     operator:
       replicas: 1
-    # Enable envoy
     envoy:
       enabled: true
-    # Basic CNI configuration
     ipam:
       mode: kubernetes
-
+    
+    # Correctly nested TLS/Secrets configuration
     tls:
-    readSecretsOnlyFromSecretsNamespace: true
-    secretsNamespace:
-      name: cilium-secrets # This can be any valid namespace name
-    secretSync:
-      enabled: true
-
+      readSecretsOnlyFromSecretsNamespace: true
+      secretsNamespace:
+        name: cilium-secrets
+      secretSync:
+        enabled: true
