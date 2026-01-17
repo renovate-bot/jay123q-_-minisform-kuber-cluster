@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - namespace.yaml
 - argocd-install.yaml
-- certificate.yaml
+# Commented out until cert-manager is installed
+# - certificate.yaml
 - istio-gateway.yaml
 - istio-virtualservice.yaml
