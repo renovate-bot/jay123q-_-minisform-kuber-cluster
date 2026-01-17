@@ -1,12 +1,13 @@
 #!/bin/bash
 
-CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
-CLI_ARCH=amd64
-if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
-curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
-sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
-sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
-rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+# CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+# CLI_ARCH=amd64
+# if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+# curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+# sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+# sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+# rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+helm uninstall cilium --namespace default
 
 #TODO
 # see if you can get helm logs out of this, i wonder why we cant install at runtime
@@ -31,6 +32,7 @@ rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 # echo "Installing Helm chart $CHART_NAME with values from $VALUES_FILE..."
 # helm install cilium cilium/cilium --version 1.18.5 --namespace kube-system
 # #helm install "$RELEASE_NAME" "$CHART_NAME" -f "$VALUES_FILE"
+helm install cilium cilium/cilium
 
 echo "Installation complete."
 # retrying
