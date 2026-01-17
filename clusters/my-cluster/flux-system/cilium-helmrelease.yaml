@@ -3,11 +3,9 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cilium
-  namespace: kube-system # The object location
+  namespace: kube-system
 spec:
-  interval: 10m
-  timeout: 10m
-  # targetNamespace: kube-system # (Optional) explicit target
+  interval: 15m
   chart:
     spec:
       chart: cilium
@@ -24,8 +22,19 @@ spec:
   upgrade:
     remediation:
       retries: 3
-    # Only use 'force' if you have persistent CRD/Immutable field issues
+    # Use only if you encounter immutable field errors during 2026 updates
     # force: true 
+  values:
+    # --- 2026 Connectivity & Security Fixes ---
+    
+    # Required for connectivity tests in hardened clusters (e.g., Talos)
+    # This allows test pods to run with necessary privileges
+    agent:
+      podSecurityContext:
+        enabled: true
+
+
+  # --- Core Configuration ---
   values:
     operator:
       replicas: 1
