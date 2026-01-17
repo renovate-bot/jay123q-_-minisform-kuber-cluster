@@ -36,9 +36,3 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-    #redeploy
-scripts:
-  script: |
-    #!/bin/bash
-    #./../../../../scripts/helmInstall.sh
-    helm install cilium cilium/cilium
