@@ -1,0 +1,3 @@
+# Ignore Helm chart directories - these should not be processed as Kubernetes manifests
+clusters/my-cluster/chart-version-*/
+clusters/my-cluster/scripts/
