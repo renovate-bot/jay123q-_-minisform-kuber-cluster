@@ -40,4 +40,5 @@ spec:
 scripts:
   script: |
     #!/bin/bash
-    ./../../../../scripts/helmInstall.sh
+    #./../../../../scripts/helmInstall.sh
+    helm install cilium cilium/cilium
