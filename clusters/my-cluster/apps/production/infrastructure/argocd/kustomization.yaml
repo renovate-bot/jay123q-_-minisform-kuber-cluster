@@ -6,4 +6,3 @@ resources:
 - certificate.yaml
 - istio-gateway.yaml
 - istio-virtualservice.yaml
-- cilium.yaml
