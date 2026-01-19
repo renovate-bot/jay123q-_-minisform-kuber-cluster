@@ -7,3 +7,5 @@ resources:
 - argocd-staging.yaml
 - cilium-helmrepo.yaml
 - cilium-helmrelease.yaml
+- metallb-helmrelease.yaml
+- metallb-helmrepo.yaml
