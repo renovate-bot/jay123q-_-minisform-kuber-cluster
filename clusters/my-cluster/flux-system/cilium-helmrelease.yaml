@@ -62,3 +62,21 @@ spec:
         name: cilium-secrets
       secretSync:
         enabled: true
+
+values:
+    # ... your existing values ...
+    k8sServiceHost: 192.168.1.112 # Explicitly set your node IP
+    k8sServicePort: 6443
+    
+    # Critical for MetalLB L2 compatibility
+    bpf:
+      lbExternalClusterIP: true
+    
+    # Since you had redirection issues (exit code 28), 
+    # ensure host-reachability is enabled for the proxy
+    hostServices:
+      enabled: true
+    externalIPs:
+      enabled: true
+    nodePort:
+      enabled: true
