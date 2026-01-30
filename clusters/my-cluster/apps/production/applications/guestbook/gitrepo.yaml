@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: argocd-example-apps
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: https://github.com/argoproj/argocd-example-apps.git
+  ref:
+    branch: master

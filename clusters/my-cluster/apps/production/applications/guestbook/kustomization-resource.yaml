@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: guestbook
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: argocd-example-apps
+  path: ./guestbook
+  prune: true
+  targetNamespace: default
