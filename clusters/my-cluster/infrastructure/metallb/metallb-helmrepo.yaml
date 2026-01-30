@@ -6,4 +6,4 @@ metadata:
   namespace: kube-system
 spec:
   interval: 1h
-  url: https://helm.metallb.io/
+  url: https://metallb.github.io/metallb
