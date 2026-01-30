@@ -3,9 +3,8 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- argocd-production.yaml
-- argocd-staging.yaml
 - cilium-helmrepo.yaml
 - cilium-helmrelease.yaml
 - metallb-helmrelease.yaml
 - metallb-helmrepo.yaml
+- guestbook.yaml
