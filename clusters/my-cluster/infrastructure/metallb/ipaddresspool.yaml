@@ -5,7 +5,6 @@ metadata:
   name: local-pool
   namespace: metallb-system
 spec:
-  # Adjust this range to a free slice of your 192.168.1.0/24 network
   addresses:
   - 192.168.1.200-192.168.1.250
 ---
