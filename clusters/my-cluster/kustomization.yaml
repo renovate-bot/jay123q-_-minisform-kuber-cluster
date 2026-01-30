@@ -4,4 +4,4 @@ resources:
   - infrastructure/cilium
   - infrastructure/metallb
   - infrastructure/metallb-config
-  - apps/guestbook
+  - apps/hello-world
