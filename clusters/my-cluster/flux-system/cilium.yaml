@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: guestbook
+  name: cilium
   namespace: flux-system
 spec:
   interval: 10m
@@ -9,6 +9,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/my-cluster/apps/guestbook
+  path: ./clusters/my-cluster/infrastructure/cilium
   prune: true
   wait: false
