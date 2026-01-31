@@ -5,3 +5,4 @@ resources:
   - infrastructure/metallb
   - infrastructure/metallb-config
   - apps/hello-world
+  - apps/minecraft-gitops.yaml

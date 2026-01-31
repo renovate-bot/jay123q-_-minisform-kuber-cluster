@@ -1,0 +1,33 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: minecraft-gitops
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: https://gitlab.com/joshuamclapp/minecraft-cluster-gitops.git
+  ref:
+    branch: master
+  secretRef:
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: minecraft-cluster
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: minecraft-gitops
+  path: ./cluster
+  prune: true
+  wait: true
+  healthChecks:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: minecraft-server
+    namespace: minecraft
