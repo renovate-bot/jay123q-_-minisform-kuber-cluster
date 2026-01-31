@@ -8,7 +8,7 @@ spec:
   interval: 1m0s
   url: ssh://git@github.com/jay123q/minecraft-cluster-gitops.git
   ref:
-    branch: master
+    branch: main
   secretRef:
     name: flux-system
 ---
