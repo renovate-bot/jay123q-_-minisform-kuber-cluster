@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - infrastructure/cilium
+  - infrastructure/local-path-provisioner
   - infrastructure/metallb
   - infrastructure/metallb-config
   - apps/hello-world
