@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: https://gitlab.com/joshuamclapp/minecraft-cluster-gitops.git
+  url: ssh://git@github.com/jay123q/minecraft-cluster-gitops.git
   ref:
     branch: master
   secretRef:

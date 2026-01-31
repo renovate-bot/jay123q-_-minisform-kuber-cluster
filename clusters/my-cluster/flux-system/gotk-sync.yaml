@@ -10,7 +10,7 @@ spec:
   timeout: 5m
   secretRef:
     name: flux-system
-  url: https://gitlab.com/joshuamclapp/minisform-kuber-cluster.git
+  url: ssh://git@github.com/jay123q/minisform-kuber-cluster.git
   ref:
     branch: master
 ---
