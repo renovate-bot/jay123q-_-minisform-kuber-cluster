@@ -35,7 +35,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: minecraft-cor-server
+  name: minecraft-cor-cluster
   namespace: flux-system
 spec:
   interval: 10m
