@@ -91,7 +91,7 @@ volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: ConfigMap 
 metadata:
   name: local-path-config
   namespace: local-path-storage
