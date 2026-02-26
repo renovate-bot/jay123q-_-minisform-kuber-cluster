@@ -31,3 +31,23 @@ spec:
     kind: Deployment
     name: minecraft-server
     namespace: minecraft
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: minecraft-cor-server
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: minecraft-gitops
+  path: ./minecraft-cor-server/cluster
+  prune: true
+  wait: true
+  healthChecks:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: minecraft-cor-server
+    namespace: minecraft-cor
