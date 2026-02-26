@@ -22,8 +22,8 @@ spec:
   timeout: 5m
   sourceRef:
     kind: GitRepository
-    name: minecraft-gitops
-  path: ./cluster
+    name: minecraft-cluster-gitops
+  path: ./../../../minecraft-cluster-gitops/cluster
   prune: true
   wait: true
   healthChecks:
@@ -42,8 +42,8 @@ spec:
   timeout: 5m
   sourceRef:
     kind: GitRepository
-    name: minecraft-gitops
-  path: ./minecraft-cor-server/cluster
+    name: minecraft-cluster-gitops
+  path: ./../../../minecraft-cluster-gitops/minecraft-cor-server/cluster
   prune: true
   wait: true
   healthChecks:
