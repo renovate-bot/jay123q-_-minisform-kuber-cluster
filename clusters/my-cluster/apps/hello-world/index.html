@@ -279,6 +279,11 @@ spec:
 
             <h3>Execute Commands in Server:</h3>
 <pre><span class="command">kubectl exec -it deployment/minecraft-server -- rcon-cli</span>
+<pre><span class="command"># If it's a StatefulSet
+kubectl exec -it statefulset/minecraft-cor-server -- rcon-cli
+
+# If the name is slightly different, use the pod directly
+kubectl exec -it <pod-name> -n <namespace> -- rcon-cli</span>
 <span class="comment"># Then run commands like: op PlayerName, whitelist add PlayerName</span></pre>
 
             <h3>Backup Your World:</h3>
