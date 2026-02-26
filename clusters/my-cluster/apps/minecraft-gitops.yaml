@@ -23,7 +23,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: minecraft-cluster-gitops
-  path: ./../../../minecraft-cluster-gitops/cluster
+  path: ./../../../../minecraft-cluster-gitops/cluster
   prune: true
   wait: true
   healthChecks:
@@ -43,7 +43,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: minecraft-cluster-gitops
-  path: ./../../../minecraft-cluster-gitops/minecraft-cor-server/cluster
+  path: ./../../../../minecraft-cluster-gitops/minecraft-cor-server/cluster
   prune: true
   wait: true
   healthChecks:
