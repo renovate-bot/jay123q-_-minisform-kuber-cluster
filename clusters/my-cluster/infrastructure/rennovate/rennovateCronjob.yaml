@@ -4,6 +4,7 @@ metadata:
   name: renovate
   namespace: rennovate
 spec:
+#  schedule: '@hourly'
   schedule: '@minutely'
   concurrencyPolicy: Forbid
   jobTemplate:
