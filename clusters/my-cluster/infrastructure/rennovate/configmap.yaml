@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: renovate-config
+  namespace: rennovate
+data:
+  config.json: |-
+    {
+      "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+      "repositories": ["OWNER/REPO1", "OWNER/REPO2"],
+      "dryRun": "full"
+    }

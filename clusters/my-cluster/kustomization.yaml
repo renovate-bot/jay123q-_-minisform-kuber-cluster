@@ -5,6 +5,6 @@ resources:
   - infrastructure/local-path-provisioner
   - infrastructure/metallb
   - infrastructure/metallb-config
-  - infrastructure/rennovate/rennovateCronjob
+  - infrastructure/rennovate
   - apps/hello-world
   - apps/minecraft-gitops.yaml
