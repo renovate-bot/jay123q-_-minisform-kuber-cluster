@@ -7,6 +7,5 @@ data:
   config.json: |-
     {
       "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-      # "repositories": ["OWNER/REPO1", "OWNER/REPO2"], # removing this as rennovate_autodiscover is set to true
       "dryRun": "full"
     }
