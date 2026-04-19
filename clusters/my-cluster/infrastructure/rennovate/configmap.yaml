@@ -7,5 +7,9 @@ data:
   config.json: |-
     {
       "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-      "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops"]
+      "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops"],
+      "automerge": true
     }
+
+    # "dryRun": "full",
+    # "automerge": true
