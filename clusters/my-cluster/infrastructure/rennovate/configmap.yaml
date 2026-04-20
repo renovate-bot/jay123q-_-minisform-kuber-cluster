@@ -8,9 +8,6 @@ data:
     {
       "$schema": "https://docs.renovatebot.com/renovate-schema.json",
       "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops"],
-      "automerge": true
+      "automerge": true,
       "extends": ["schedule:automergeDaily", ":dependencyDashboard"]
     }
-
-    # "dryRun": "full",
-    # "automerge": true
