@@ -5,7 +5,7 @@ metadata:
   namespace: rennovate
 spec:
   # schedule: '*/10 * * * *' 
-  schedule: '0 */6 * * *' # Run every 6 hours
+  schedule: '0 0 * * 0' # run at 12 on sunday
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
