@@ -16,13 +16,14 @@ Single-node Kubernetes homelab cluster managed by **Flux CD v2.7.5**, running on
 ```
 .
 ├── .sops.yaml                          # SOPS encryption rules (age key, encrypted_regex for data/stringData only)
+├── CLAUDE.md                           # This file — AI assistant context
 ├── charts/                             # Local Helm charts (versioned templates, not currently deployed via Flux)
 │   ├── chart-version-0-0-1/
 │   └── chart-version-0-0-2/
 └── clusters/my-cluster/
     ├── kustomization.yaml              # TOP-LEVEL: root Kustomization that wires everything together
     ├── flux-system/
-    │   ├── gotk-components.yaml        # Flux controllers (DO NOT EDIT)
+    │   ├── gotk-components.yaml        # Flux controllers (DO NOT EDIT — managed by Renovate for version bumps)
     │   ├── gotk-sync.yaml             # Flux self-management: GitRepository + Kustomization (includes SOPS decryption config)
     │   └── kustomization.yaml
     ├── apps/
@@ -67,7 +68,7 @@ Both use the same `flux-system` SSH secret for git auth. Both have health checks
 
 | Component | Type | Namespace | Status | Notes |
 |---|---|---|---|---|
-| **Cilium** | HelmRelease | kube-system | **FAILING** | See Known Issues |
+| **Cilium** | HelmRelease v1.18.6 | kube-system | **FAILING** | See Known Issues — cluster still works on previously applied config |
 | **MetalLB** | HelmRelease v0.15.3 | metallb-system | Healthy | L2 mode, pool 192.168.1.200-250 |
 | **Local Path Provisioner** | HelmRelease | local-path-storage | Healthy | Default StorageClass |
 | **Renovate** | CronJob | rennovate | Healthy | See Renovate section |
@@ -101,7 +102,14 @@ sops clusters/my-cluster/infrastructure/rennovate/secret.yaml
 
 **CRITICAL LESSON LEARNED:** The `gotk-sync.yaml` decryption config must also be applied to the live cluster object via `kubectl patch` — Flux does NOT self-apply changes to its own Kustomization spec from git. If SOPS decryption stops working after a cluster rebuild, run:
 ```bash
-kubectl patch kustomization flux-system -n flux-system --type merge   -p '{spec:{decryption:{provider:sops,secretRef:{name:sops-age}}}}'
+kubectl patch kustomization flux-system -n flux-system --type merge \
+  -p '{spec:{decryption:{provider:sops,secretRef:{name:sops-age}}}}'
+```
+Then also recreate the age secret:
+```bash
+kubectl create secret generic sops-age \
+  --namespace=flux-system \
+  --from-file=age.agekey=~/.config/sops/age/keys.txt
 ```
 
 ---
@@ -110,24 +118,42 @@ kubectl patch kustomization flux-system -n flux-system --type merge   -p '{spec:
 
 Self-hosted Renovate running as a Kubernetes CronJob in the `rennovate` namespace.
 
-- **Schedule:** `0 */6 * * *` (every 6 hours) — NOTE: previously had a bug with `* */6 * * *` which fires every minute during those hours
+- **Schedule:** `0 0 * * 0` (weekly, Sunday at midnight UTC)
 - **Image:** renovate/renovate:latest
 - **Autodiscover:** enabled, filtered to `jay123q/minisform-kuber-cluster` and `jay123q/minecraft-cluster-gitops`
+- **Automerge:** enabled globally, with `schedule:automergeDaily` preset (automerges before 5am)
+- **Dependency Dashboard:** enabled (`:dependencyDashboard` preset) — creates a tracking issue in each target repo
 - **Config:** mounted from ConfigMap at /config/config.json
 - **Auth:** GitHub fine-grained PAT stored in SOPS-encrypted secret `renovate-env`
 - **Log level:** debug
 
+### Renovate Config (config.json)
+```json
+{
+  $schema: https://docs.renovatebot.com/renovate-schema.json,
+  autodiscoverFilter: [jay123q/minisform-kuber-cluster, jay123q/minecraft-cluster-gitops],
+  automerge: true,
+  extends: [schedule:automergeDaily, :dependencyDashboard]
+}
+```
+
 ### PAT Permissions Required
 The fine-grained GitHub PAT needs these repository permissions for ALL target repos:
 - **Contents:** Read and write
-- **Issues:** Read and write (Renovate queries issues via GraphQL — this caused "platform-unknown-error" when missing)
+- **Issues:** Read and write (Renovate queries issues via GraphQL — this caused platform-unknown-error when missing)
 - **Pull requests:** Read and write
 - **Metadata:** Read
 
+### Renovate Activity
+Renovate has already successfully:
+- Created and merged PR #6 updating Flux from v2.7.5 to v2.8.5 (gotk-components.yaml)
+- Note: Flux CLI still reports v2.7.5 — the gotk-components may need a `flux install` or pod restart to pick up the new version
+
 ### Common Renovate Debugging
-- **"Could not parse config file"**: config.json does NOT support comments. No `#` or `//` in the JSON.
-- **"platform-unknown-error"**: usually a PAT permission issue. Check the debug logs for the specific GraphQL field that's FORBIDDEN.
-- **"bad-credentials" / 401**: PAT was regenerated but the k8s secret still has the old token. Re-encrypt with sops and push.
+- **Could not parse config file**: config.json does NOT support comments. No `#` or `//` in the JSON.
+- **platform-unknown-error**: usually a PAT permission issue. Check the debug logs for the specific GraphQL field that's FORBIDDEN.
+- **bad-credentials / 401**: PAT was regenerated but the k8s secret still has the old token. Re-encrypt with sops and push.
+- **Cron schedule gotcha**: `* */6 * * *` means every minute during hours 0,6,12,18 (60 runs per window). Use `0 */6 * * *` for once every 6 hours.
 - **Manual test run:** `kubectl create job --from=cronjob/renovate renovate-test -n rennovate`
 - **Check logs:** `kubectl logs -n rennovate -l job-name=renovate-test --tail=50`
 
@@ -140,19 +166,19 @@ The fine-grained GitHub PAT needs these repository permissions for ALL target re
 Helm upgrade failed: values don't meet the specifications of the schema(s):
 cilium: at '/agent': got object, want boolean
 ```
-The `agent` key in `cilium-helmrelease.yaml` values is set as an object (`agent.podSecurityContext.enabled: true`) but Cilium 1.18.6 expects `agent` to be a boolean. The cluster still functions because Cilium was previously installed successfully — the failed upgrade just means it's running an older config. To fix: check the Cilium 1.18.x values schema and restructure the values block.
+The `agent` key in `cilium-helmrelease.yaml` values is set as an object (`agent.podSecurityContext.enabled: true`) but Cilium 1.18.6 expects `agent` to be a boolean. The cluster still functions because Cilium was previously installed successfully — the failed upgrade just means it's running an older config. To fix: check the Cilium 1.18.x values schema and restructure the values block. Consider removing the `agent` block entirely or replacing it with the correct schema-compliant values.
 
 ---
 
 ## Workloads Summary
 
-| Namespace | Workload | Type | Storage | Managed By |
-|---|---|---|---|---|
-| default | hello-world | Deployment (1 replica) | none | this repo |
-| minecraft | minecraft-server | Deployment (1 replica) | 10Gi PVC (local-path) | minecraft-cluster-gitops |
-| minecraft-cor | minecraft-cor-server | Deployment (1 replica) | 20Gi PVC (local-path) | minecraft-cluster-gitops |
-| minecraft-cor | minecraft-cor-backup | CronJob (daily 3am) | uses minecraft-cor PVC | minecraft-cluster-gitops |
-| rennovate | renovate | CronJob (every 6h) | none | this repo |
+| Namespace | Workload | Type | Schedule/Replicas | Storage | Managed By |
+|---|---|---|---|---|---|
+| default | hello-world | Deployment | 1 replica | none | this repo |
+| minecraft | minecraft-server | Deployment | 1 replica | 10Gi PVC (local-path) | minecraft-cluster-gitops |
+| minecraft-cor | minecraft-cor-server | Deployment | 1 replica | 20Gi PVC (local-path) | minecraft-cluster-gitops |
+| minecraft-cor | minecraft-cor-backup | CronJob | daily 3am | uses minecraft-cor PVC | minecraft-cluster-gitops |
+| rennovate | renovate | CronJob | weekly Sun midnight | none | this repo |
 
 ---
 
@@ -176,4 +202,10 @@ cd clusters/my-cluster/infrastructure/rennovate && kubectl kustomize .
 
 # Trigger manual renovate run
 kubectl create job --from=cronjob/renovate renovate-test -n rennovate
+
+# Check renovate logs
+kubectl logs -n rennovate -l job-name=renovate-test --tail=50
+
+# Edit SOPS-encrypted secret
+cd ~/Documents/github/minisform-kuber-cluster && sops clusters/my-cluster/infrastructure/rennovate/secret.yaml
 ```
