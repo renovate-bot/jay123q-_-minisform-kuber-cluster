@@ -8,7 +8,8 @@ spec:
   interval: 1m0s
   url: ssh://git@github.com/jay123q/minecraft-cluster-gitops.git
   ref:
-    branch: main
+    branch: main 
+    # so ideally we would migrate the minecraft servers into their own git repos.
   secretRef:
     name: flux-system
 ---
@@ -24,7 +25,7 @@ spec:
     kind: GitRepository
     name: minecraft-gitops
   # path: ./../../../../minecraft-cluster-gitops/cluster
-  path: ./cluster
+  path: ./2026-minecraft-dnd-cluster
   prune: true
   wait: true
   healthChecks:
