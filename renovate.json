@@ -9,7 +9,7 @@
   "packageRules": [
        {
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "groups": ["all non-major updates"],
+            "groupName" : "all changes",
              "automerge": false
           }
         ]
