@@ -9,8 +9,9 @@
   "packageRules": [
        {
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "matchingPackageNames": ["*"],
             "groupName" : "all changes",
-             "automerge": false
+            "automerge": false
           }
         ]
 

@@ -7,7 +7,7 @@ data:
   config.json: |-
     {
       "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-      "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops"],
+      "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops", "jay123q/webcrawler_rescale"],
       "automerge": true,
       "extends": ["schedule:automergeDaily", ":dependencyDashboard"]
     }
