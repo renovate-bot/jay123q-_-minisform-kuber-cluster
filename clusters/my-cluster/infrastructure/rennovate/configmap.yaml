@@ -9,5 +9,18 @@ data:
       "$schema": "https://docs.renovatebot.com/renovate-schema.json",
       "autodiscoverFilter": ["jay123q/minisform-kuber-cluster", "jay123q/minecraft-cluster-gitops", "jay123q/webcrawler_rescale"],
       "automerge": true,
-      "extends": ["schedule:automergeDaily", ":dependencyDashboard"]
+      "extends": ["config:base"],
+      "baseBranches": ["main"],
+      // "schedule": ["before 3am on the first day of the month"],
+      "automerge": false,
+      "recreateWhen": "always",
+      // "extends: [schedule:automergeDaily, :dependencyDashboard]",
+      "packageRules": [
+          {
+                "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+                "matchingPackageNames": ["*"],
+                "groupName" : "all changes",
+                "automerge": false
+              }
+            ]
     }
