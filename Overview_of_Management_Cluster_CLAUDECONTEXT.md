@@ -209,3 +209,54 @@ kubectl logs -n rennovate -l job-name=renovate-test --tail=50
 # Edit SOPS-encrypted secret
 cd ~/Documents/github/minisform-kuber-cluster && sops clusters/my-cluster/infrastructure/rennovate/secret.yaml
 ```
+
+---
+
+## Minecraft Servers — Suspended (2026-05-21)
+
+Both minecraft server workloads have been **intentionally suspended**. Flux will not reconcile them, and the deployments are scaled to zero.
+
+### What was done
+
+1. **Suspended Flux Kustomizations** in this repo:
+   - File: `clusters/my-cluster/apps/minecraft-gitops.yaml`
+   - Added `spec.suspend: true` to both Kustomization resources (`minecraft-cluster` and `minecraft-cor-cluster`)
+   - This prevents Flux from reconciling changes from the `minecraft-cluster-gitops` repo
+
+2. **Scaled deployments to 0 replicas** in `jay123q/minecraft-cluster-gitops`:
+   - File: `2026-minecaft-dnd-cluster/minecraft-server.yaml` — `replicas: 0`
+   - File: `minecraft-cor-server/cluster/deployment.yaml` — `replicas: 0`
+
+3. **Suspended the backup CronJob** in `jay123q/minecraft-cluster-gitops`:
+   - File: `minecraft-cor-server/cluster/minecraft-backup-cron.yaml` — added `spec.suspend: true`
+
+### How to resume
+
+To bring the minecraft servers back online, reverse these changes:
+
+1. In `jay123q/minecraft-cluster-gitops`:
+   - Set `replicas: 1` in `2026-minecaft-dnd-cluster/minecraft-server.yaml`
+   - Set `replicas: 1` in `minecraft-cor-server/cluster/deployment.yaml`
+   - Remove `suspend: true` from `minecraft-cor-server/cluster/minecraft-backup-cron.yaml`
+   - Commit and push
+
+2. In this repo (`jay123q/minisform-kuber-cluster`):
+   - Remove `suspend: true` from both Kustomizations in `clusters/my-cluster/apps/minecraft-gitops.yaml`
+   - Commit and push
+
+3. Force reconciliation (optional, otherwise Flux picks it up within 10 minutes):
+   ```bash
+   flux reconcile source git flux-system && flux reconcile kustomization flux-system
+   ```
+
+### Current state of affected resources
+
+| Resource | Namespace | State | Notes |
+|---|---|---|---|
+| Kustomization/minecraft-cluster | flux-system | Suspended | Won't reconcile until resumed |
+| Kustomization/minecraft-cor-cluster | flux-system | Suspended | Won't reconcile until resumed |
+| Deployment/minecraft-server | minecraft | 0 replicas | PVC retained |
+| Deployment/minecraft-cor-server | minecraft-cor | 0 replicas | PVC retained |
+| CronJob/minecraft-cor-backup | minecraft-cor | Suspended | No backups while server is down |
+
+**Note:** PVCs (`minecraft-data` in `minecraft` namespace, `minecraft-cor-data` in `minecraft-cor` namespace) are retained. World data is safe. Resuming will reattach to existing volumes.
